@@ -47,16 +47,16 @@ if File.exist?(CONFIG)
 end
 
 # Defaults for config options defined in CONFIG
-$num_instances ||= 3
-$instance_name_prefix ||= "k8s"
+$num_instances ||= 5
+$instance_name_prefix ||= "kubenode"
 $vm_gui ||= false
-$vm_memory ||= 2048
+$vm_memory ||= 4096
 $vm_cpus ||= 2
 $shared_folders ||= {}
 $forwarded_ports ||= {}
-$subnet ||= "172.18.8"
+$subnet ||= "192.168.56"
 $subnet_ipv6 ||= "fd3c:b398:0698:0756"
-$os ||= "ubuntu2004"
+$os ||= "debian12"
 $network_plugin ||= "flannel"
 # Setting multi_networking to true will install Multus: https://github.com/k8snetworkplumbingwg/multus-cni
 $multi_networking ||= "False"
@@ -97,7 +97,7 @@ end
 
 $box = SUPPORTED_OS[$os][:box]
 # if $inventory is not set, try to use example
-$inventory = "inventory/sample" if ! $inventory
+$inventory = "inventory/myk8s" if ! $inventory
 $inventory = File.absolute_path($inventory, File.dirname(__FILE__))
 
 # if $inventory has a hosts.ini file use it, otherwise copy over
@@ -266,7 +266,7 @@ Vagrant.configure("2") do |config|
         "kube_network_plugin_multus": $multi_networking,
         "download_run_once": $download_run_once,
         "download_localhost": "False",
-        "download_cache_dir": ENV['HOME'] + "/kubespray_cache",
+        "download_cache_dir": ENV['PWD'] + "/kubespray_cache",
         # Make kubespray cache even when download_run_once is false
         "download_force_cache": $download_force_cache,
         # Keeping the cache on the nodes can improve provisioning speed while debugging kubespray
